@@ -1,6 +1,6 @@
 # 规则账本（完整规则本）
 
-> v1.0.0 | 8 条 | 所有总线设备必须服从
+> v1.1.0 | 51 条 | 所有总线设备必须服从
 
 ## R001 ✅ 红绿灯互斥协议
 - 分类: 协作 | 范围: all-bus-devices | 状态: enforced
@@ -41,3 +41,218 @@
 - 分类: 治理 | 范围: all-bus-devices | 状态: enforced
 - 摘要: 新规则提交流程：提交→总线审核→裁决评估→吸收→同步泛化所有侧
 - 详情: 所有总线设备服从完整规则本（rules-registry/rules.json）；规则变更走账本版本管理
+
+## J31 ✅ R3 插件代码产物共享读
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: ~/dsh-plugin-local-projects/external-link-policy/ 代码产物**登记共享读**；R3 插件域写改走红绿灯（属主 e0c391f7 等）
+- 详情: 属主: e0c391f7（属主）/读取方
+
+## J32 ✅ dsh-collab 写权限代写依赖
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **代写需属主授权/知会**（J4 写前通知属主延伸）；属主边界登记
+- 详情: 属主: 代写方/属主
+
+## J1 ✅ meituan-multi/data 目录共享
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 分文件写无竞争；整体操作（移动/归档/清理）前 agent_light(dir:meituan-multi/data)
+- 详情: 属主: 45f89009/a3bc8cba/面板
+
+## J2 ✅ exit-marker/heartbeat 看门狗
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 写归看门狗（原子写+30s 心跳）；其他会话只读避免双写
+- 详情: 属主: 3d490920（写）/全员（读）
+
+## J3 ✅ **plugin-smoke 临时文件隔离**
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **已落地**：PID/会话后缀隔离（6ed4daf2 实施）+ file:plugin-smoke 锁内操作
+- 详情: 属主: 6ed4daf2/b241741f/ffb7c3ab
+
+## J4 ✅ **写前通知属主**（登记属主文件防静默多写）
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 对登记属主文件写改前：agent_light 查灯 或 属主同意；无归属注释的改动视为违规
+- 详情: 属主: 全员（6e49710e/582093dd 合并建议）
+
+## J5 ✅ app.db 并发访问
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 只读导入可加 shared 读锁（WAL 低风险）
+- 详情: 属主: a3bc8cba/de7b29de
+
+## J6 ✅ docs 与 kb_outbox 共享读
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 登记 file:meituan-multi/docs 共享读；写仍按属主
+- 详情: 属主: a3bc8cba 等
+
+## J7 ✅ cld-health 读竞争
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 标注「读并发高频」+ offset 缓存降低读放大
+- 详情: 属主: 9910d4b2/724614ce/6ed4daf2
+
+## J8 ✅ health-check --log 追加竞态
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 单点调度（sysops 集成后统一入口）或文件锁
+- 详情: 属主: 9910d4b2/b241741f
+
+## J9 ✅ 双巡检重叠告警
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: health-check vs sysops health 告警去重（--cld 扩展已缓解，仍建议收口）
+- 详情: 属主: 9910d4b2
+
+## J10 ✅ 向日葵 MCP 会话独占
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 前瞻登记 device-remote 资源类型走红绿灯；SSH 需用先查灯
+- 详情: 属主: 5a5368af（独占）/全员（用前查灯）
+
+## J11 ✅ 插件目录 node_modules 重建
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: file:~/dsh-plugin-repo-pipeline **禁止 npm install**（零 node_modules 硬约束，本地副本遮蔽宿主 peer deps 致 inject 失效）；构建/冒烟/依赖审计走临时目录或 CI
+- 详情: 属主: dcac2308（属主）/0e84e65c/6ed4daf2/ffb7c3ab（遵守）
+
+## J12 ✅ session-storage 全量读域
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 登记 **store:session-storage-read 共享读域**：检查脚本（session-storage-check.js/post-restart 复核）执行前 agent_light 查此域，写方持锁时检查方等待；频率受控（post-restart/QA 回归/明确委派时，不常驻）
+- 详情: 属主: b278baab/QA ffb7c3ab/自查 6ed4daf2（执行方）
+
+## J13 ✅ ChromaDB research 三方写
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **multi-writer 事实登记**（3b5efeef 调研索引 + b241741f 情报 + 55d4d1bd ingest 增量）：共享写者裁定维持，幂等哈希去重兜底；未来写入延迟优先查此面
+- 详情: 属主: 三方（3b5efeef/b241741f/55d4d1bd）
+
+## J14 ✅ Ollama bge-m3 嵌入并发
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 与 **G2 同源**（多会话大批量嵌入单实例串行排队互相拖慢）：大索引任务错峰或共享读锁（关联 G2 优先治理项，合并跟踪）
+- 详情: 属主: 3b5efeef/b241741f/55d4d1bd/4787d717
+
+## J15 ✅ 追加类共享文件无锁
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: wiki/log.md 等 append-only 文件无红绿灯惯例，并发追加交错（heredoc 失败/覆盖风险）——「追加类共享文件」规范：原子 append 或 shared 读锁包裹，约定串行
+- 详情: 属主: 追加写入方（3b5efeef/4787d717 等）
+
+## J16 ✅ 端口 3081 归属冲突
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **3081 保持 com.dsh.remote 归属**（582093dd 确认，tailnet-only+健康监控）；CLD 服务器模式恢复启用改用 3082（CLD_PORT=3082 显式）；冲突 fallback 告警待补
+- 详情: 属主: 582093dd（com.dsh.remote）/CLD 侧（43b1a2d3 关注）
+
+## J17 ✅ 健康/巡检三角
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 理清分工（体检 6e49710e / 审查 9910d4b2 / 复核 724614ce 各司其维）；~/.cld/logs 读取错峰+共享读锁；与 J7/J9 关联跟踪
+- 详情: 属主: 三角（6e49710e/9910d4b2/724614ce）
+
+## J18 ✅ vault 多写者文件碰撞
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **file:vault 锁纪律严格执行**（写前查灯/声明/即关）+ 前缀隔离维持；与 G3/J13 关联
+- 详情: 属主: 四写者（b241741f/3b5efeef/55d4d1bd/2fe61625）
+
+## J19 ✅ profiles/web 读未持锁
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **读校验也声明 shared 锁**（dump-config 校验 vs 并发写防撕裂，低成本高价值）；升级 F1 规范；与 J4 互补
+- 详情: 属主: 四操手（c1111ffe/eb5ee9cc/1e54d56d/0e84e65c）
+
+## J20 ✅ ~/.dsh/sessions 读共享标注
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 登记「**多会话读共享、无写冲突预期**」（zstd 转录已降级不写；多会话持久化写由宿主管理）——避免检查方误报冲突；与 J12 store:session-storage-read 关联
+- 详情: 属主: 检查方（e032fb77/b278baab/QA 等，只读共享）
+
+## J21 ✅ media 读写 vs 摄取并发
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 错峰约定：摄取避开媒体写稿高峰（file:media 红绿灯+幂等兜底已覆盖现状，低风险）
+- 详情: 属主: 54e809ed（写稿）/55d4d1bd（摄取）
+
+## J22 ✅ hub 静态服务属主边界
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **service:media-hub（8090）属主边界**：服务=54e809ed / launchd plist+健康探测=582093dd；变更需双方协调
+- 详情: 属主: 54e809ed/582093dd
+
+## J23 ✅ node_modules 重建 vs 运行映射
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **已知冲突类型**：重建 node_modules（供应链加固）时运行中实例已映射旧 dylib（node-pty/ssh2）——缓解=重建前广播 + 完成后统一重启窗口验证；与 F3/J11 关联
+- 详情: 属主: 0e84e65c/c1111ffe（重建）/eb5ee9cc（运维观察）
+
+## J24 ✅ xberg 恢复演练 vs 运行态
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **潜在冲突项**：file:profile-assets/xberg 恢复演练与运行态并发读写竞争（低概率）——演练窗口化规避（避开运行态读写时段）；与 F4 关联
+- 详情: 属主: 0e84e65c/c1111ffe（演练方）
+
+## J25 ✅ ~/.claude.json MCP 配置源
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **明确写权归属**：mcpServers 多方写并发双写风险——统一经 mcp-station 管理或单一写者（file:~/.claude.json 锁）；与 E2/D1 关联
+- 详情: 属主: 1e54d56d（关注）/mcp-station（管理方）
+
+## J26 ✅ 内存紧张并发构建
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 0.1GB 空闲下多会话并发构建/服务竞争——设备协调排程维持 + 重型构建错峰；与 D3/E4 关联
+- 详情: 属主: 5a5368af（排程）/构建方
+
+## J27 ✅ profiles/web bundles 行共存
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 仅动插件 bundles 行与供应链共存——红绿灯纪律维持；与 F1/J19 关联
+- 详情: 属主: 1e54d56d/0e84e65c/c1111ffe
+
+## J28 ✅ IM 窗口导航冲突（已解决）
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **已修复**：页面抓取 fallback 导航 IM 工作台（找不到商家页）→ 严格排除 imworkbench 报错不降级 + im_window:N 归 de7b29de 导航专属；**修复经验入规范防复发**（关联 I1/B2）
+- 详情: 属主: aa528267/de7b29de
+
+## J29 ✅ 测试守白约定
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **用户指示固化**：测试仅用守白 8 店，4 主力店不做测试（运营操作域遵守）
+- 详情: 属主: aa528267/全员（测试方）
+
+## J30 ✅ 重启窗口集中协调
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **统一走重启窗口批次执行 + 集中复核**（多会话重启生效变更：插件 bundles/依赖加固/mcp-station 挂载等），避免互相打断；与重启挂起清单衔接；并入 §九 H5
+- 详情: 属主: 协调者 fa1f9150（统筹）/变更方
+
+## J33 ✅ **登录提醒/聚焦时间纪律**（用户确认，全员执行）
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 「登录提醒/聚焦」类指令**非营业时间（08:00-22:00 外）一律延迟至营业时间执行**（店里无人收验证码，凌晨弹窗/聚焦=无效打扰）；分工=登录补登提醒=运营职能、focus 执行=技术动作（de7b29de 提供 API）；与 dev-ops-boundary.md（v1.0.187）一致
+- 详情: 属主: 全员（运营发起/开发执行）
+
+## J34 ✅ **广播约束规范**（用户确认 2026-08-18，全员执行）
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: ① **默认定向发送**（agent_send 相关方），禁止默认全广播 ② 全广播仅限三类：重启窗口公告/全员制度发布/重大事件安全告警（需协调者认可）③ 前台角色名单 20（17 正式 + 3 治理必需），其余后台按需点开 ④ 信息分发=先想「谁需要知道」⑤ 例外：外链通讯员 92623479 对外通道（企微/飞书）不受限
+- 详情: 属主: 全员（协调者 fa1f9150 监督，违规记 HR 台账）
+
+## J35 ✅ **本地模型互斥纪律**（用户确认 2026-08-18，全员执行）
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: LM Studio（1234）与 Ollama（11434）**不同时开模型**（两份推理引擎重复拖慢）；**用完及时关**（LM Studio unload / Ollama 停）；开新模型前先查对方是否在跑；纪要分档（紧急云端/常规本地/批量错峰）执行时遵守此条；与 E5/G2 关联
+- 详情: 属主: 全员（本地推理使用者）
+
+## J36 ✅ **总线牵线 + 广场沉淀**（用户确认 2026-08-18，架构 v2 核心规范）
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: ① **总线瘦身**：只做组局通知（对象+资源）、资源声明、结束提醒沉淀——不做内容搬运 ② **协作层直连**：跨线程 agent_send 直接对话，不经协调者转发 ③ **沉淀三轨**：论坛（共识/决策）· research/（知识）· 登记表（权威/资源）④ **沉淀闸门**：规则=HR、触发=总线结束提醒、执行=文档摄取 55d4d1bd、审查=各会话自审+摄取复查 ⑤ **向量化判定**：「3 个月后还有人查吗」→ 是则 vault+ChromaDB，否则只落论坛/线程 ⑥ bus-capture 自动捕捉分级（工具属主 HR）
+- 详情: 属主: 全员（HR 定规则/摄取执行/协调者监督）
+
+## J37 ✅ **插件安装验证流程**（2026-08-18 崩溃复盘，用户提出 + 6ed4daf2/前任 e7bfeea8/媒体 54e809ed 补充增强）
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **安装前**：HR 评估资源面（新增 bundle 计数/依赖）+ 查 bundles 清单 + 供应链评估（关联 F1/J11/J27/role-creation）；**安装中**：**一批 ≤2 个**（防连环崩）；**安装后**：① `dsh --profile web --dump-default-config` 校验能加载 ② 隔离副本验证（/tmp/dsh-test-home）③ plugin-smoke 冒烟（复用工具）+ **工具调用级验证**（试调关键工具返回结构，gov schema 错实证）④ **关键服务存活探测**（核心服务 HTTP 探针，防「装 A 崩 B」）；**未验证插件不得进生产 bundles**（gate/office/flower-cockpit 暂移出待验先例）
+- 详情: 属主: 全员（安装方 1e54d56d/eb5ee9cc/0e84e65c 执行，HR 评估监督/登记）
+
+## J39 ✅ **调研/架构风险穷举规范**（2026-08-19 用户指示，全员执行）
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 任何新架构/新调研/新工具立项前：① 运行 scripts/risk-enumeration.py 生成穷举模板 ② 按 7 类（架构/通信/成本/治理/实施/学术/外部）穷举风险 ③ 概率×影响定级，**高×高必防（防线未就绪不立项或限试点）** ④ 登记风险表（CAHAC 附录 D）+ registry ⑤ 月复盘更新——沉淀=research/cost-governance/risk-enumeration-template.md（方法论文档）+ DSH 知识库
+- 详情: 属主: 立项方/HR（登记）
+
+## J40 ✅ **技术决策论文支撑规范**（2026-08-19 用户评估纳入）
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **重大技术决策**（新架构/协议/技术路线/方案选型）立项前：① 必须调研并**获取论文原文入库**（knowledge_import_url/paper-fetch 直入库，内容不占对话）作为理论支撑 ② 决策文档注明论文支撑（规则表+引用）③ 付费墙论文用摘要+注明「待补全文」；**常规技术选型**（2-3 方案对比）推荐原文支撑；**日常小任务**豁免。配套=调研方法论（research/cost-governance/）+ ops-science-research 知识库（论文即证据库）
+- 详情: 属主: 立项方/HR（登记）
+
+## J41 ✅ **沟通与事实纪律**（用户指示 2026-08-19，全网络）
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 用户无代码基础但懂概念：复杂项目/逻辑**尽量用比喻**说明（token=水电费/黑板=公告栏）；**禁虚构/猜测/假设结论**（基于已知回复，未知→明说+去探索查证引用）；衔接 J40 论文支撑
+- 详情: 属主: 全员
+
+## J43 ✅ **记忆与检索纪律**（用户指示，全网络）
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: ① 每任务建 doc 文件夹存对话记忆（用户原话+决策+上下文）② 用户让回忆/搜记录→**先查记忆库/知识库/对话记忆**（knowledge_search/vault/registry）→找到关联再询问确认
+- 详情: 属主: 全员
+
+## J44 ✅ **资源复用纪律**（用户指示，全网络）
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: **安装任何工具前先全面搜索本地是否已有**（glob/知识库/工具面）；**能调用/映射/标记打通的都不新建**，避免每路径装独立工具；衔接 J37 供应链评估
+- 详情: 属主: 全员
+
+## J38 ✅ **外链入向即时反馈规范**（用户提出 2026-08-18，92623479 提案，HR 评估登记）
+- 分类: 资源冲突 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 企微等外链入向消息处理：**收到即确认（3 秒内）** + **附预计时间**（查询 5-10min / 操作即时 / 复杂 30min）+ **完成即回复** + **超时升级**；实现=wecom-inbox 改「收到即确认+路由」模式（**协调者确认后落地**）；反例=本次用户发消息静默只采不答（体验断裂）
+- 详情: 属主: 92623479（落地）/ HR（登记）
