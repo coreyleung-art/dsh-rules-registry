@@ -1,6 +1,6 @@
 # 规则账本（完整规则本）
 
-> v1.3.0 | 53 条 | 所有总线设备必须服从
+> v1.4.0 | 54 条 | 所有总线设备必须服从
 
 ## R001 ✅ 红绿灯互斥协议
 - 分类: 协作 | 范围: all-bus-devices | 状态: enforced
@@ -266,3 +266,8 @@
 - 分类: 工程 | 范围: all-bus-devices | 状态: enforced
 - 摘要: 任何新插件需求先评估：独立插件 vs 纳入已有子插件 vs 复用已有，给用户对比表+定位+理由，用户决策后才建
 - 详情: 工具：plugin-eval-cli.py（扫描现有插件→判定→输出定位）；避免重复浪费资源
+
+## R011 ✅ 重启沙箱强制门（restart-guard）
+- 分类: 工程 | 范围: all-bus-devices | 状态: enforced
+- 摘要: CLD/DSH 重启前必须跑 dsh-tools restart-guard 沙箱模拟，0 FAIL 才允许重启；任一 FAIL 返回 1 禁止重启
+- 详情: CLD/DSH 重启前必须执行 dsh-tools restart-guard <插件目录>... 沙箱模拟（deploy-check 全量 + 重启专属 4 项：type:module 匹配/ESM 导入完整性/符号链接/模块加载实测）。任一 FAIL → 返回 1 禁止重启（防插件加载即崩，2026-08-29 central-inbox 缺 type:module 事故教训）。node 自动探测不依赖调用者 PATH。工具：dsh-tools v1.10.0 restart-guard。验证标准：exit 0 = 可重启；exit 1 = 禁止重启，修复后重跑。
