@@ -1,10 +1,10 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "lastUpdated": "2026-08-29",
   "maintainer": "mac-mini 中枢 (session-fa1f9150)",
   "audit": {
-    "ruleCount": 51,
-    "enforced": 51
+    "ruleCount": 53,
+    "enforced": 53
   },
   "rules": [
     {
@@ -718,6 +718,34 @@
       "summary": "企微等外链入向消息处理：**收到即确认（3 秒内）** + **附预计时间**（查询 5-10min / 操作即时 / 复杂 30min）+ **完成即回复** + **超时升级**；实现=wecom-inbox 改「收到即确认+路由」模式（**协调者确认后落地**）；反例=本次用户发消息静默只采不答（体验断裂）",
       "detail": "属主: 92623479（落地）/ HR（登记）",
       "enforcedBy": "tool+manual",
+      "added": "2026-08-29",
+      "approvedBy": "user"
+    },
+    {
+      "id": "R009",
+      "name": "角色命名标准（设备名+角色名）",
+      "category": "治理",
+      "scope": "all-bus-devices",
+      "status": "enforced",
+      "version": "1.0",
+      "source": "docs/role-naming-standard-v1.md",
+      "summary": "智能体身份 = 设备名+角色名（如 mac-mini-协调者）；会话代码 session-xxx 隐藏到思维链/内部，用户不可见",
+      "detail": "同角色多设备用设备前缀区分，避免混乱；agent_profile role 字段按规范",
+      "enforcedBy": "review",
+      "added": "2026-08-29",
+      "approvedBy": "user"
+    },
+    {
+      "id": "R010",
+      "name": "新插件评估（独立 vs 纳入已有）",
+      "category": "工程",
+      "scope": "all-bus-devices",
+      "status": "enforced",
+      "version": "1.0",
+      "source": "docs/plugin-eval-rule-v1.md",
+      "summary": "任何新插件需求先评估：独立插件 vs 纳入已有子插件 vs 复用已有，给用户对比表+定位+理由，用户决策后才建",
+      "detail": "工具：plugin-eval-cli.py（扫描现有插件→判定→输出定位）；避免重复浪费资源",
+      "enforcedBy": "tool",
       "added": "2026-08-29",
       "approvedBy": "user"
     }
