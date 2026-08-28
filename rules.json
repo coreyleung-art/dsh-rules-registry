@@ -79,14 +79,14 @@
     },
     {
       "id": "R006",
-      "name": "插件化工具化标准（8 项）",
+      "name": "插件化工具化标准（9 项）",
       "category": "工程",
       "scope": "all-bus-devices",
       "status": "enforced",
-      "version": "1.0",
+      "version": "1.1",
       "source": "agent-bus-principles.md#插件化工具化标准",
-      "summary": "凡插件化/工具化默认按 8 项：dsh 插件形态/TCC 检测/CLD 自适应/dsh 版本自适应/文档化/版本管理/统一日志/自动落链",
-      "detail": "新插件/工具必须 8 项全达标才交付",
+      "summary": "凡插件化/工具化默认按 9 项：dsh 插件形态/TCC 检测/CLD 自适应/dsh 版本自适应/文档化/版本管理/统一日志/自动落链/CLI 治理",
+      "detail": "新插件/工具必须 9 项全达标才交付；CLI 治理=治理需求必须带 CLI（参考 rules-cli.py）",
       "enforcedBy": "review",
       "added": "2026-08-28",
       "approvedBy": "user"
