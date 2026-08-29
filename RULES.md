@@ -1,6 +1,6 @@
 # 规则账本（完整规则本）
 
-> v1.5.0 | 55 条 | 所有总线设备必须服从
+> v1.5.1 | 55 条 | 所有总线设备必须服从
 
 ## R001 ✅ 红绿灯互斥协议
 - 分类: 协作 | 范围: all-bus-devices | 状态: enforced
@@ -275,4 +275,4 @@
 ## R012 ✅ 完整体传输契约（CHECKS 七要素）
 - 分类: 协作 | 范围: all-bus-devices | 状态: enforced
 - 摘要: 所有端对端/总线对端侧传输必须是完整体（开箱即用零二次开发）：内容完整/校验和/可执行/上下文/版本可溯/自检/可回滚
-- 详情: CHECKS 七要素：Complete 内容完整（无空值/占位符）/ Hash 校验和 / Executable 可执行 / Context 上下文（README/设计）/ Known-version 版本可溯 / Self-verified 自检 / Safe 可回滚。发送方七问自检，接收方不全即拒（打回补全，不自行开发）。工具：checks-transfer.py（半成品 FAIL 拦截）。历史教训：i9 health-check 只发描述无源码 / node-bridge tag 无 release 资产 / playbook 空 value。流程：docs/complete-artifact-transfer-contract-v1.md
+- 详情: CHECKS 七要素：Complete 内容完整（无空值/占位符）/ Hash 校验和 / Executable 可执行 / Context 上下文（README/设计）/ Known-version 版本可溯 / Self-verified 自检 / Safe 可回滚。发送方七问自检，接收方不全即拒（打回补全，不自行开发）。工具：checks-transfer.py（半成品 FAIL 拦截）。历史教训：i9 health-check 只发描述无源码 / node-bridge tag 无 release 资产 / playbook 空 value。黑板描述文档（2026-08-29 用户确认）：黑板 notes/ 可承载意图描述与设计逻辑简要（模板见契约文档第九节），与网盘实体配套构成完整体——实体齐全但无意图/设计逻辑描述 = 半成品（Context 要素 FAIL）。流程：docs/complete-artifact-transfer-contract-v1.md
