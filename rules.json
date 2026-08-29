@@ -1,10 +1,10 @@
 {
- "version": "1.4.1",
+ "version": "1.5.0",
  "lastUpdated": "2026-08-29",
  "maintainer": "mac-mini 中枢 (session-fa1f9150)",
  "audit": {
-  "ruleCount": 54,
-  "enforced": 54
+  "ruleCount": 55,
+  "enforced": 55
  },
  "rules": [
   {
@@ -763,6 +763,21 @@
    "added": "2026-08-29",
    "approvedBy": "user",
    "approvedAt": "2026-08-29 04:42"
+  },
+  {
+   "id": "R012",
+   "name": "完整体传输契约（CHECKS 七要素）",
+   "category": "协作",
+   "scope": "all-bus-devices",
+   "status": "enforced",
+   "version": "1.0",
+   "source": "docs/complete-artifact-transfer-contract-v1.md",
+   "summary": "所有端对端/总线对端侧传输必须是完整体（开箱即用零二次开发）：内容完整/校验和/可执行/上下文/版本可溯/自检/可回滚",
+   "detail": "CHECKS 七要素：Complete 内容完整（无空值/占位符）/ Hash 校验和 / Executable 可执行 / Context 上下文（README/设计）/ Known-version 版本可溯 / Self-verified 自检 / Safe 可回滚。发送方七问自检，接收方不全即拒（打回补全，不自行开发）。工具：checks-transfer.py（半成品 FAIL 拦截）。历史教训：i9 health-check 只发描述无源码 / node-bridge tag 无 release 资产 / playbook 空 value。流程：docs/complete-artifact-transfer-contract-v1.md",
+   "enforcedBy": "tool+manual",
+   "added": "2026-08-29",
+   "approvedBy": "user",
+   "approvedAt": "2026-08-29 13:12"
   }
  ]
 }
