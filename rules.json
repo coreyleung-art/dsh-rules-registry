@@ -1,10 +1,10 @@
 {
- "version": "2.0.0",
+ "version": "2.1.0",
  "lastUpdated": "2026-08-29",
  "maintainer": "mac-mini 中枢 (session-fa1f9150)",
  "audit": {
-  "ruleCount": 58,
-  "enforced": 58
+  "ruleCount": 59,
+  "enforced": 59
  },
  "rules": [
   {
@@ -823,6 +823,21 @@
    "added": "2026-08-29",
    "approvedBy": "user",
    "approvedAt": "2026-08-29 14:29"
+  },
+  {
+   "id": "R016",
+   "name": "CLD 统一治理",
+   "category": "工程",
+   "scope": "all-bus-devices",
+   "status": "enforced",
+   "version": "1.0",
+   "source": "docs/cld-governance-spec-v1.md",
+   "summary": "CLD 开发统一版本/日志/文档管理+落链，单治理中枢，迭代回流，热迭代规划，端侧分发，沙箱模拟隔离生产升级",
+   "detail": "CLD 开发统一治理：①版本管理（git+tag+CHANGELOG+genebank 登记，语义化版本）②日志管理（统一 ~/.cld/logs/ exit-trace）③文档落链（README/架构/治理规范→知识库+台账+黑板）④单治理中枢（~/dsh-collab/cld/，端侧不各自修）⑤迭代回流（端侧改动→R010 打包挂 genebank→中枢评估合并→版本升级）⑥热迭代规划（重启需求分级：前端刷新/插件变更重启/配置热加载）⑦端侧分发（genebank 完整包+校验+回滚备份）⑧沙箱模拟（restart-gate 阶段0 dev-sandbox 隔离验证后才动生产，防升级自死）。规范：docs/cld-governance-spec-v1.md。治理仓库 ~/dsh-collab/cld/。",
+   "enforcedBy": "tool+manual",
+   "added": "2026-08-29",
+   "approvedBy": "user",
+   "approvedAt": "2026-08-29 14:47"
   }
  ]
 }

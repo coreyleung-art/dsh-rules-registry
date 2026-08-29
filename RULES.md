@@ -1,6 +1,6 @@
 # 规则账本（完整规则本）
 
-> v2.0.0 | 58 条 | 所有总线设备必须服从
+> v2.1.0 | 59 条 | 所有总线设备必须服从
 
 ## R001 ✅ 红绿灯互斥协议
 - 分类: 协作 | 范围: all-bus-devices | 状态: enforced
@@ -291,3 +291,8 @@
 - 分类: 工程 | 范围: all-bus-devices | 状态: enforced
 - 摘要: 任何开发/变更（插件/工具/脚本/配置/工作流）先隔离小样本验证（dev-sandbox.py），测通再推进生产
 - 详情: 工具 dev-sandbox.py：plugin（语法/ESM/依赖/符号链接/加载实测）/tool（cargo check）/script（语法）/config（语法降级）/workflow（步骤/依赖/失败处理）+ auto 自动探测。原则：隔离环境 + 小样本 + 不动生产，测通再推进。token 节省：历史案例平均省 ~6 轮排查（12k-24k token/案例），月估 100k-350k token。与 R011（restart-gate 阶段0 已含小样本）+ R014（自查门）+ R012（完整体）配套。流程：docs/dev-sandbox-simulator-v1.md。
+
+## R016 ✅ CLD 统一治理
+- 分类: 工程 | 范围: all-bus-devices | 状态: enforced
+- 摘要: CLD 开发统一版本/日志/文档管理+落链，单治理中枢，迭代回流，热迭代规划，端侧分发，沙箱模拟隔离生产升级
+- 详情: CLD 开发统一治理：①版本管理（git+tag+CHANGELOG+genebank 登记，语义化版本）②日志管理（统一 ~/.cld/logs/ exit-trace）③文档落链（README/架构/治理规范→知识库+台账+黑板）④单治理中枢（~/dsh-collab/cld/，端侧不各自修）⑤迭代回流（端侧改动→R010 打包挂 genebank→中枢评估合并→版本升级）⑥热迭代规划（重启需求分级：前端刷新/插件变更重启/配置热加载）⑦端侧分发（genebank 完整包+校验+回滚备份）⑧沙箱模拟（restart-gate 阶段0 dev-sandbox 隔离验证后才动生产，防升级自死）。规范：docs/cld-governance-spec-v1.md。治理仓库 ~/dsh-collab/cld/。
