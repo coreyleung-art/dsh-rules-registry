@@ -1,10 +1,10 @@
 {
- "version": "1.6.0",
+ "version": "1.7.0",
  "lastUpdated": "2026-08-29",
  "maintainer": "mac-mini 中枢 (session-fa1f9150)",
  "audit": {
-  "ruleCount": 56,
-  "enforced": 56
+  "ruleCount": 57,
+  "enforced": 57
  },
  "rules": [
   {
@@ -793,6 +793,21 @@
    "added": "2026-08-29",
    "approvedBy": "user",
    "approvedAt": "2026-08-29 13:29"
+  },
+  {
+   "id": "R014",
+   "name": "插件自查门（依赖完整性）",
+   "category": "工程",
+   "scope": "all-bus-devices",
+   "status": "enforced",
+   "version": "1.0",
+   "source": "docs/plugin-selfcheck-spec-v1.md",
+   "summary": "每个 dsh 插件必须内置 selfcheck.js 自查门：apply 最前检查 peerDeps 可解析/关键符号导入/type:module 匹配，缺模块写黑板告警 data/ops/plugin-selfcheck/，不等到崩溃或被外部检查发现",
+   "detail": "插件 apply() 最前执行 runSelfCheck()：①peerDependencies 可解析性（require.resolve）②关键符号顶层导入（join/homedir 等）③type:module 匹配。缺模块 → 写 ~/.dsh/plugin-selfcheck/ + 黑板 data/ops/plugin-selfcheck/<plugin>-<ts> 告警。三插件已接入（central-inbox/agent-way/openchronicle），模板 lib/selfcheck.js。与 R011（外部 restart-guard）互补：自查门=插件内主动暴露，restart-guard=外部强制校验。历史教训：central-inbox 缺 type:module/startAdaptGuard 未导入等反复缺模块。",
+   "enforcedBy": "tool+manual",
+   "added": "2026-08-29",
+   "approvedBy": "user",
+   "approvedAt": "2026-08-29 13:44"
   }
  ]
 }

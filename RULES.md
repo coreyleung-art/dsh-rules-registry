@@ -1,6 +1,6 @@
 # 规则账本（完整规则本）
 
-> v1.6.0 | 56 条 | 所有总线设备必须服从
+> v1.7.0 | 57 条 | 所有总线设备必须服从
 
 ## R001 ✅ 红绿灯互斥协议
 - 分类: 协作 | 范围: all-bus-devices | 状态: enforced
@@ -281,3 +281,8 @@
 - 分类: 架构 | 范围: all-bus-devices | 状态: enforced
 - 摘要: 互为救援设备：重启方留准备信息给救援方观察，异常发救援信号，仅非破坏性救援，禁止破坏性操作
 - 详情: 重启方（Restarter）重启前必做：①R011 强制门 0 FAIL ②写黑板 restart-intent（准备重启信息：原因/影响/救援联系/回滚）③通知救援方。救援方（Rescuer）必做：①观察心跳+intent 状态迁移 ②超时/离线发救援信号 rescue-<node>-<ts> ③仅非破坏性救援（白名单：read-logs/check-process/restart-daemon/write-status/notify）。⛔ 禁止破坏性：delete-data/modify-config/reset/destructive-project/business-data。协调者仲裁救援动作。工具：restart-intent.py（留档）+ rescue-watch.py（观察）。互为救援对：mac-mini↔MBP↔i9。流程：docs/restart-rescue-protocol-v1.md
+
+## R014 ✅ 插件自查门（依赖完整性）
+- 分类: 工程 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 每个 dsh 插件必须内置 selfcheck.js 自查门：apply 最前检查 peerDeps 可解析/关键符号导入/type:module 匹配，缺模块写黑板告警 data/ops/plugin-selfcheck/，不等到崩溃或被外部检查发现
+- 详情: 插件 apply() 最前执行 runSelfCheck()：①peerDependencies 可解析性（require.resolve）②关键符号顶层导入（join/homedir 等）③type:module 匹配。缺模块 → 写 ~/.dsh/plugin-selfcheck/ + 黑板 data/ops/plugin-selfcheck/<plugin>-<ts> 告警。三插件已接入（central-inbox/agent-way/openchronicle），模板 lib/selfcheck.js。与 R011（外部 restart-guard）互补：自查门=插件内主动暴露，restart-guard=外部强制校验。历史教训：central-inbox 缺 type:module/startAdaptGuard 未导入等反复缺模块。
