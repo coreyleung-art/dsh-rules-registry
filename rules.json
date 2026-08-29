@@ -1,5 +1,5 @@
 {
- "version": "1.8.0",
+ "version": "1.9.0",
  "lastUpdated": "2026-08-29",
  "maintainer": "mac-mini 中枢 (session-fa1f9150)",
  "audit": {
@@ -751,14 +751,14 @@
   },
   {
    "id": "R011",
-   "name": "重启沙箱强制门（restart-gate 统一）",
+   "name": "重启沙箱强制门（restart-gate 三级）",
    "category": "工程",
    "scope": "all-bus-devices",
    "status": "enforced",
-   "version": "2.0",
+   "version": "3.0",
    "source": "docs/restart-guard-sop.md",
-   "summary": "CLD/DSH 重启前必须跑 dsh-tools restart-gate（静态 restart-guard + 动态 restart-stress-test 压测），全 PASS 才允许重启",
-   "detail": "统一入口 dsh-tools restart-gate [--rounds N] [--hold S]：阶段1 restart-guard 静态检查（type:module/ESM 导入/符号链接/模块+apply 加载实测 + checks 清单）；阶段2 restart-stress-test 动态压测（隔离端口 boot 冒烟 N 轮，三插件自查门+注入配置+无崩溃，100% PASS 才过）。任一 FAIL → exit 1 禁止重启；全 PASS → exit 0。工具：dsh-tools v1.11.0 restart-gate。验证标准：exit 0 = 可重启；exit 1 = 禁止重启，修复后重跑。2026-08-29 实战：15 轮压测全通过 + 静态 0 FAIL。",
+   "summary": "CLD/DSH 重启前必须跑 dsh-tools restart-gate 三级验证：①隔离小样本（不动生产）②静态检查 ③动态压测，全 PASS 才允许重启",
+   "detail": "统一入口 dsh-tools restart-gate [--rounds N] [--hold S] [--skip-sandbox] [--skip-stress]：阶段0 隔离小样本验证（cld-shell-sandbox-test：壳行为/模式对话框阻塞/launchd KeepAlive，不动生产 CLD/config/app.asar）；阶段1 restart-guard 静态检查（type:module/ESM 导入/符号链接/模块+apply 加载实测 + checks 清单）；阶段2 restart-stress-test 动态压测（隔离端口 boot 冒烟 N 轮，自查门+注入配置+无崩溃，100% 才过）。任一 FAIL → exit 1 禁止重启。工具：dsh-tools v1.12.0 restart-gate。2026-08-29 实战：小样本 A/B/C 全过 + 静态 0 FAIL + 压测 2/2 PASS。",
    "enforcedBy": "tool",
    "added": "2026-08-29",
    "approvedBy": "user",

@@ -1,6 +1,6 @@
 # 规则账本（完整规则本）
 
-> v1.8.0 | 57 条 | 所有总线设备必须服从
+> v1.9.0 | 57 条 | 所有总线设备必须服从
 
 ## R001 ✅ 红绿灯互斥协议
 - 分类: 协作 | 范围: all-bus-devices | 状态: enforced
@@ -267,10 +267,10 @@
 - 摘要: 任何新插件需求先评估：独立插件 vs 纳入已有子插件 vs 复用已有，给用户对比表+定位+理由，用户决策后才建
 - 详情: 工具：plugin-eval-cli.py（扫描现有插件→判定→输出定位）；避免重复浪费资源。端侧资产吸收（v1.1 补充，2026-08-29 用户指示）：端侧（i9/MBP）提交设计/代码/工具/插件必须打包完整资产（设计文档+源码+版本）挂 AI 网盘（rust-genebank 8801），中枢从网盘拉取实体后执行评估链（deploy-check + restart-guard + 选型评估器 + plugin-eval），禁止只凭黑板描述评估。流程见 docs/edge-asset-absorption-flow-v1.md。
 
-## R011 ✅ 重启沙箱强制门（restart-gate 统一）
+## R011 ✅ 重启沙箱强制门（restart-gate 三级）
 - 分类: 工程 | 范围: all-bus-devices | 状态: enforced
-- 摘要: CLD/DSH 重启前必须跑 dsh-tools restart-gate（静态 restart-guard + 动态 restart-stress-test 压测），全 PASS 才允许重启
-- 详情: 统一入口 dsh-tools restart-gate [--rounds N] [--hold S]：阶段1 restart-guard 静态检查（type:module/ESM 导入/符号链接/模块+apply 加载实测 + checks 清单）；阶段2 restart-stress-test 动态压测（隔离端口 boot 冒烟 N 轮，三插件自查门+注入配置+无崩溃，100% PASS 才过）。任一 FAIL → exit 1 禁止重启；全 PASS → exit 0。工具：dsh-tools v1.11.0 restart-gate。验证标准：exit 0 = 可重启；exit 1 = 禁止重启，修复后重跑。2026-08-29 实战：15 轮压测全通过 + 静态 0 FAIL。
+- 摘要: CLD/DSH 重启前必须跑 dsh-tools restart-gate 三级验证：①隔离小样本（不动生产）②静态检查 ③动态压测，全 PASS 才允许重启
+- 详情: 统一入口 dsh-tools restart-gate [--rounds N] [--hold S] [--skip-sandbox] [--skip-stress]：阶段0 隔离小样本验证（cld-shell-sandbox-test：壳行为/模式对话框阻塞/launchd KeepAlive，不动生产 CLD/config/app.asar）；阶段1 restart-guard 静态检查（type:module/ESM 导入/符号链接/模块+apply 加载实测 + checks 清单）；阶段2 restart-stress-test 动态压测（隔离端口 boot 冒烟 N 轮，自查门+注入配置+无崩溃，100% 才过）。任一 FAIL → exit 1 禁止重启。工具：dsh-tools v1.12.0 restart-gate。2026-08-29 实战：小样本 A/B/C 全过 + 静态 0 FAIL + 压测 2/2 PASS。
 
 ## R012 ✅ 完整体传输契约（CHECKS 七要素）
 - 分类: 协作 | 范围: all-bus-devices | 状态: enforced
