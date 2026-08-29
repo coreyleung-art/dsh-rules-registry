@@ -1,6 +1,6 @@
 # 规则账本（完整规则本）
 
-> v1.4.0 | 54 条 | 所有总线设备必须服从
+> v1.4.1 | 54 条 | 所有总线设备必须服从
 
 ## R001 ✅ 红绿灯互斥协议
 - 分类: 协作 | 范围: all-bus-devices | 状态: enforced
@@ -265,7 +265,7 @@
 ## R010 ✅ 新插件评估（独立 vs 纳入已有）
 - 分类: 工程 | 范围: all-bus-devices | 状态: enforced
 - 摘要: 任何新插件需求先评估：独立插件 vs 纳入已有子插件 vs 复用已有，给用户对比表+定位+理由，用户决策后才建
-- 详情: 工具：plugin-eval-cli.py（扫描现有插件→判定→输出定位）；避免重复浪费资源
+- 详情: 工具：plugin-eval-cli.py（扫描现有插件→判定→输出定位）；避免重复浪费资源。端侧资产吸收（v1.1 补充，2026-08-29 用户指示）：端侧（i9/MBP）提交设计/代码/工具/插件必须打包完整资产（设计文档+源码+版本）挂 AI 网盘（rust-genebank 8801），中枢从网盘拉取实体后执行评估链（deploy-check + restart-guard + 选型评估器 + plugin-eval），禁止只凭黑板描述评估。流程见 docs/edge-asset-absorption-flow-v1.md。
 
 ## R011 ✅ 重启沙箱强制门（restart-guard）
 - 分类: 工程 | 范围: all-bus-devices | 状态: enforced

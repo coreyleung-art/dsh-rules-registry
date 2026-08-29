@@ -1,5 +1,5 @@
 {
- "version": "1.4.0",
+ "version": "1.4.1",
  "lastUpdated": "2026-08-29",
  "maintainer": "mac-mini 中枢 (session-fa1f9150)",
  "audit": {
@@ -741,10 +741,10 @@
    "category": "工程",
    "scope": "all-bus-devices",
    "status": "enforced",
-   "version": "1.0",
+   "version": "1.1",
    "source": "docs/plugin-eval-rule-v1.md",
    "summary": "任何新插件需求先评估：独立插件 vs 纳入已有子插件 vs 复用已有，给用户对比表+定位+理由，用户决策后才建",
-   "detail": "工具：plugin-eval-cli.py（扫描现有插件→判定→输出定位）；避免重复浪费资源",
+   "detail": "工具：plugin-eval-cli.py（扫描现有插件→判定→输出定位）；避免重复浪费资源。端侧资产吸收（v1.1 补充，2026-08-29 用户指示）：端侧（i9/MBP）提交设计/代码/工具/插件必须打包完整资产（设计文档+源码+版本）挂 AI 网盘（rust-genebank 8801），中枢从网盘拉取实体后执行评估链（deploy-check + restart-guard + 选型评估器 + plugin-eval），禁止只凭黑板描述评估。流程见 docs/edge-asset-absorption-flow-v1.md。",
    "enforcedBy": "tool",
    "added": "2026-08-29",
    "approvedBy": "user"
