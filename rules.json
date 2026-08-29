@@ -1,10 +1,10 @@
 {
- "version": "1.5.1",
+ "version": "1.6.0",
  "lastUpdated": "2026-08-29",
  "maintainer": "mac-mini 中枢 (session-fa1f9150)",
  "audit": {
-  "ruleCount": 55,
-  "enforced": 55
+  "ruleCount": 56,
+  "enforced": 56
  },
  "rules": [
   {
@@ -778,6 +778,21 @@
    "added": "2026-08-29",
    "approvedBy": "user",
    "approvedAt": "2026-08-29 13:12"
+  },
+  {
+   "id": "R013",
+   "name": "重启救援协议",
+   "category": "架构",
+   "scope": "all-bus-devices",
+   "status": "enforced",
+   "version": "1.0",
+   "source": "docs/restart-rescue-protocol-v1.md",
+   "summary": "互为救援设备：重启方留准备信息给救援方观察，异常发救援信号，仅非破坏性救援，禁止破坏性操作",
+   "detail": "重启方（Restarter）重启前必做：①R011 强制门 0 FAIL ②写黑板 restart-intent（准备重启信息：原因/影响/救援联系/回滚）③通知救援方。救援方（Rescuer）必做：①观察心跳+intent 状态迁移 ②超时/离线发救援信号 rescue-<node>-<ts> ③仅非破坏性救援（白名单：read-logs/check-process/restart-daemon/write-status/notify）。⛔ 禁止破坏性：delete-data/modify-config/reset/destructive-project/business-data。协调者仲裁救援动作。工具：restart-intent.py（留档）+ rescue-watch.py（观察）。互为救援对：mac-mini↔MBP↔i9。流程：docs/restart-rescue-protocol-v1.md",
+   "enforcedBy": "tool+manual",
+   "added": "2026-08-29",
+   "approvedBy": "user",
+   "approvedAt": "2026-08-29 13:29"
   }
  ]
 }
