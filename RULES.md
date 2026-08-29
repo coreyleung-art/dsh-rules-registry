@@ -1,6 +1,6 @@
 # 规则账本（完整规则本）
 
-> v1.9.0 | 57 条 | 所有总线设备必须服从
+> v2.0.0 | 58 条 | 所有总线设备必须服从
 
 ## R001 ✅ 红绿灯互斥协议
 - 分类: 协作 | 范围: all-bus-devices | 状态: enforced
@@ -286,3 +286,8 @@
 - 分类: 工程 | 范围: all-bus-devices | 状态: enforced
 - 摘要: 每个 dsh 插件必须内置 selfcheck.js 自查门：apply 最前检查 peerDeps 可解析/关键符号导入/type:module 匹配，缺模块写黑板告警 data/ops/plugin-selfcheck/，不等到崩溃或被外部检查发现
 - 详情: 插件 apply() 最前执行 runSelfCheck()：①peerDependencies 可解析性（require.resolve）②关键符号顶层导入（join/homedir 等）③type:module 匹配。缺模块 → 写 ~/.dsh/plugin-selfcheck/ + 黑板 data/ops/plugin-selfcheck/<plugin>-<ts> 告警。三插件已接入（central-inbox/agent-way/openchronicle），模板 lib/selfcheck.js。与 R011（外部 restart-guard）互补：自查门=插件内主动暴露，restart-guard=外部强制校验。历史教训：central-inbox 缺 type:module/startAdaptGuard 未导入等反复缺模块。
+
+## R015 ✅ 开发沙箱先行（dev-sandbox）
+- 分类: 工程 | 范围: all-bus-devices | 状态: enforced
+- 摘要: 任何开发/变更（插件/工具/脚本/配置/工作流）先隔离小样本验证（dev-sandbox.py），测通再推进生产
+- 详情: 工具 dev-sandbox.py：plugin（语法/ESM/依赖/符号链接/加载实测）/tool（cargo check）/script（语法）/config（语法降级）/workflow（步骤/依赖/失败处理）+ auto 自动探测。原则：隔离环境 + 小样本 + 不动生产，测通再推进。token 节省：历史案例平均省 ~6 轮排查（12k-24k token/案例），月估 100k-350k token。与 R011（restart-gate 阶段0 已含小样本）+ R014（自查门）+ R012（完整体）配套。流程：docs/dev-sandbox-simulator-v1.md。

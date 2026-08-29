@@ -1,10 +1,10 @@
 {
- "version": "1.9.0",
+ "version": "2.0.0",
  "lastUpdated": "2026-08-29",
  "maintainer": "mac-mini 中枢 (session-fa1f9150)",
  "audit": {
-  "ruleCount": 57,
-  "enforced": 57
+  "ruleCount": 58,
+  "enforced": 58
  },
  "rules": [
   {
@@ -808,6 +808,21 @@
    "added": "2026-08-29",
    "approvedBy": "user",
    "approvedAt": "2026-08-29 13:44"
+  },
+  {
+   "id": "R015",
+   "name": "开发沙箱先行（dev-sandbox）",
+   "category": "工程",
+   "scope": "all-bus-devices",
+   "status": "enforced",
+   "version": "1.0",
+   "source": "docs/dev-sandbox-simulator-v1.md",
+   "summary": "任何开发/变更（插件/工具/脚本/配置/工作流）先隔离小样本验证（dev-sandbox.py），测通再推进生产",
+   "detail": "工具 dev-sandbox.py：plugin（语法/ESM/依赖/符号链接/加载实测）/tool（cargo check）/script（语法）/config（语法降级）/workflow（步骤/依赖/失败处理）+ auto 自动探测。原则：隔离环境 + 小样本 + 不动生产，测通再推进。token 节省：历史案例平均省 ~6 轮排查（12k-24k token/案例），月估 100k-350k token。与 R011（restart-gate 阶段0 已含小样本）+ R014（自查门）+ R012（完整体）配套。流程：docs/dev-sandbox-simulator-v1.md。",
+   "enforcedBy": "tool",
+   "added": "2026-08-29",
+   "approvedBy": "user",
+   "approvedAt": "2026-08-29 14:29"
   }
  ]
 }
